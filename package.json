@@ -1,0 +1,55 @@
+{
+  "name": "test-engine",
+  "version": "0.0.0",
+  "description": "Demand a Node or npm version to run your app.",
+  "homepage": "https://github.com/sholladay/test-engine",
+  "main": "index.js",
+  "author": {
+    "name": "Seth Holladay",
+    "url": "http://seth-holladay.com",
+    "email": "me@seth-holladay.com"
+  },
+  "scripts": {
+    "test": "xo"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:sholladay/test-engine.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sholladay/test-engine/issues",
+    "email": "me@seth-holladay.com"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "license": "MPL-2.0",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "bin-version": "^2.0.0",
+    "pkg-conf": "^1.1.3",
+    "semver": "^5.3.0"
+  },
+  "devDependencies": {
+    "eslint-config-tidy": "^0.3.0",
+    "xo": "^0.16.0"
+  },
+  "keywords": [
+    "engine",
+    "engines",
+    "engineStrict",
+    "strict",
+    "bin",
+    "version",
+    "versions",
+    "bin-version",
+    "check",
+    "assert",
+    "test"
+  ],
+  "xo": {
+    "extend": "tidy"
+  }
+}

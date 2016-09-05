@@ -1,6 +1,6 @@
 {
   "name": "test-engine",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Demand a Node or npm version to run your app.",
   "homepage": "https://github.com/sholladay/test-engine",
   "main": "index.js",

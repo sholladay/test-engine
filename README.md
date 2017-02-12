@@ -56,24 +56,13 @@ Ask for a more detailed report.
 
 ```js
 testEngine(null, null, { detail : true })
-    .then((engines) => {
-        console.log(engines);
-        // {
-        //     allSatisfied : false,
-        //     satisfied : {
-        //         npm : {
-        //             expected : '^2.0.0',
-        //             actual   : '2.14.2'
-        //         }
-        //     },
-        //     notSatisfied : {
-        //         node : {
-        //             expected : '>4.2.0',
-        //             actual   : '4.0.0'
-        //         }
-        //     }
-        // }
-    });
+    .then(console.log);
+    // {
+    //     allSatisfied : true,
+    //     satisfied : {
+    //         npm : { actual : '4.0.0', expected : '>=4' }
+    //     }
+    // }
 ```
 
 You can register a handler that will only run when the user has compatible engines.
@@ -84,6 +73,60 @@ testEngine.assert().then(() => {
     // Do anything. User is gauranteed to have compatible engines.
     console.log('Hey Jane! You are good to go.');
 });
+```
+
+## API
+
+### testEngine(wanted, known, option)
+
+Returns a `Promise` for a report of whether the `known` engines [satisfy](https://github.com/npm/node-semver#ranges) the `wanted` engines.
+
+### testEngine.detail(wanted, known)
+
+Same as `testEngine()` with the `detail` option set to true.
+
+### testEngine.assert(wanted, known)
+
+Returns a `Promise` for a detailed report asserting that the `wanted` engines are satisfied. If they are not, the promise is rejected with an error whose `engine` field has the report.
+
+#### wanted
+
+Type: `string` or `object`<br>
+Default: `process.cwd()`
+
+A path to start a [find-up](https://github.com/sindresorhus/find-up) search for a package.json with an `engines` field. Or an explicit object of the same form as the `engines` field.
+
+#### known
+
+Type: `object`
+
+An object of key/value pairs for engine names and their respective versions to compare against `wanted`. Fields for `node` and `npm` will be filled in if necessary according to the engines in `wanted`. However, they can be provided here as overrides.
+
+#### option
+
+Type: `object`
+
+Settings for how to report the result.
+
+##### detail
+
+Type: `boolean`<br>
+Default: `false`
+
+Report the result as an object with individual fields for each engine rather than a simple boolean.
+
+Example:
+
+```js
+{
+    allSatisfied : false,
+    satisfied : {
+        npm : { actual : '4.0.0', expected : '>=4' }
+    },
+    notSatisfied : {
+        node : { actual : '7.0.0', expected : '>=8' }
+    }
+}
 ```
 
 ## Contributing

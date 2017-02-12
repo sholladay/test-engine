@@ -100,10 +100,6 @@ const testEngine = async (wanted, known, option) => {
                 result.notSatisfied = {};
             }
             result.notSatisfied[name] = data;
-            // If any engine is bad, flip the switch that informs
-            // the user, so that they don't have to loop through
-            // the result themselves in order to determine that,
-            // which would duplicate some effort.
             result.allSatisfied = false;
         }
     });
@@ -111,26 +107,22 @@ const testEngine = async (wanted, known, option) => {
     return result;
 };
 
-// When no expectations are provided, testEngine() tries to figure them out
-// based on the caller's package.json. But since we are an intermediary,
-// our own module is the caller. So we forward our caller's path
-// with the same logic used by testEngine().
-testEngine.assert = async (wanted, known, option) => {
+testEngine.detail = (wanted, known, option) => {
     const config = Object.assign({}, option, {
         detail : true
     });
+    return testEngine(wanted, known, config);
+};
 
-    const engine = await testEngine(wanted, known, config);
+testEngine.assert = async (...args) => {
+    const engine = await testEngine.detail(...args);
     if (engine.allSatisfied) {
         return engine;
     }
 
-    let errMessage = 'Your engines are not compatible:\n';
-    const { notSatisfied } = engine;
-    Object.keys(notSatisfied).forEach((name) => {
-        const { actual, expected } = notSatisfied[name];
-        errMessage += `  ${name} ${actual} (expected ${expected})\n`;
-    });
+    const errMessage = Object.entries(engine.notSatisfied).reduce((msg, [name, val]) => {
+        return msg + `  ${name} ${val.actual}, expected ${val.expected}\n`;
+    }, 'Your engines are not compatible:\n');
 
     const err = new RangeError(errMessage);
     err.engine = engine;
